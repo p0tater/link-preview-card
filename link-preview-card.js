@@ -14,12 +14,38 @@ import { I18NMixin } from "@haxtheweb/i18n-manager/lib/I18NMixin.js";
  */
 export class LinkPreviewCard extends DDDSuper(I18NMixin(LitElement)) {
 
+  inputChanged(e) {
+    this.value = this.shadowRoot.querySelector('#input').value;
+    console.log(this.value);
+    this.getData(this.value);
+  }
+
+  async getData(link) {
+    const url = `https://open-apis.hax.cloud/api/services/website/metadata?q=${this.link}`;
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`Response status: ${response.status}`);
+      }
+  
+      const json = await response.json();
+      console.log(json.data);
+      document.querySelector('#here').innerHTML = JSON.stringify(json.data, null, 2);
+      document.querySelector('#there').innerHTML = json.data["og:site_name"];
+    } catch (error) {
+      console.error(error.message);
+    }
+  }
+  
+
+
   static get tag() {
     return "link-preview-card";
   }
 
   constructor() {
     super();
+    this.link = "www.psu.edu";
     this.title = "";
     this.t = this.t || {};
     this.t = {
@@ -39,7 +65,8 @@ export class LinkPreviewCard extends DDDSuper(I18NMixin(LitElement)) {
   static get properties() {
     return {
       ...super.properties,
-      title: { type: String },
+      title: { type: String, reflect:true },
+      link: { type: String, reflect:true  },
     };
   }
 
@@ -63,11 +90,16 @@ export class LinkPreviewCard extends DDDSuper(I18NMixin(LitElement)) {
     `];
   }
 
-  // Lit render the HTML
+  // Lit render the HTML <h3><span>${this.t.title}:</span> ${this.title}</h3>
   render() {
     return html`
 <div class="wrapper">
-  <h3><span>${this.t.title}:</span> ${this.title}</h3>
+  <div>
+    <input id="input" type="text" value="${this.link}" @input="${this.inputChanged}">
+  </div>
+  <div>
+    
+  </div>
   <slot></slot>
 </div>`;
   }
