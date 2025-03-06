@@ -16,13 +16,14 @@ export class LinkPreviewCard extends DDDSuper(I18NMixin(LitElement)) {
 
   inputChanged(e) {
     this.value = this.shadowRoot.querySelector('#input').value;
-    console.log(this.value);
+    this.link = this.value;
     this.getData(this.value);
   }
 
   async getData(link) {
     const url = `https://open-apis.hax.cloud/api/services/website/metadata?q=${this.link}`;
     try {
+      this.loading = true;
       const response = await fetch(url);
       if (!response.ok) {
         throw new Error(`Response status: ${response.status}`);
@@ -30,12 +31,21 @@ export class LinkPreviewCard extends DDDSuper(I18NMixin(LitElement)) {
   
       const json = await response.json();
       console.log(json.data);
-      document.querySelector('#here').innerHTML = JSON.stringify(json.data, null, 2);
-      document.querySelector('#there').innerHTML = json.data["og:site_name"];
+      const hereElement = this.shadowRoot.querySelector('#here');
+      const thereElement = this.shadowRoot.querySelector('#there');
+      if (hereElement || thereElement) {
+        this.loading = false;
+        hereElement.innerHTML = JSON.stringify(json.data, null, 2);
+        thereElement.innerHTML = json.data["og:title"];
+      }
+     
     } catch (error) {
       console.error(error.message);
     }
   }
+
+  
+
   
 
 
@@ -45,9 +55,10 @@ export class LinkPreviewCard extends DDDSuper(I18NMixin(LitElement)) {
 
   constructor() {
     super();
-    this.link = "www.psu.edu";
+    this.link = "";
     this.title = "";
     this.t = this.t || {};
+    this.loading = false;
     this.t = {
       ...this.t,
       title: "Title",
@@ -87,6 +98,20 @@ export class LinkPreviewCard extends DDDSuper(I18NMixin(LitElement)) {
       h3 span {
         font-size: var(--link-preview-card-label-font-size, var(--ddd-font-size-s));
       }
+      pre{
+        height: 100px;
+        width: 95%;
+        color:black;
+      }
+      .loader {
+        border: 16px solid #f3f3f3; /* Light grey */
+        border-top: 16px solid #3498db; /* Blue */
+        border-radius: 50%;
+        width: 120px;
+        height: 120px;
+        animation: spin 2s linear infinite;
+      }
+
     `];
   }
 
@@ -97,10 +122,12 @@ export class LinkPreviewCard extends DDDSuper(I18NMixin(LitElement)) {
   <div>
     <input id="input" type="text" value="${this.link}" @input="${this.inputChanged}">
   </div>
-  <div>
-    
+  <div class="loader" ?hidden="${!this.loading}">
+      <pre id="there" >
+      </pre>
+      <pre id="here" >
+      </pre>
   </div>
-  <slot></slot>
 </div>`;
   }
 
