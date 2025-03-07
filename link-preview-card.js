@@ -15,15 +15,17 @@ import { I18NMixin } from "@haxtheweb/i18n-manager/lib/I18NMixin.js";
 export class LinkPreviewCard extends DDDSuper(I18NMixin(LitElement)) {
 
   inputChanged(e) {
+    this.loading = true;
     this.value = this.shadowRoot.querySelector('#input').value;
     this.link = this.value;
     this.getData(this.value);
   }
 
   async getData(link) {
-    const url = `https://open-apis.hax.cloud/api/services/website/metadata?q=${this.link}`;
+    this.loading = true;
+    const url = `https://open-apis.hax.cloud/api/services/website/metadata?q=https://${this.link}`;
     try {
-      this.loading = true;
+      
       const response = await fetch(url);
       if (!response.ok) {
         throw new Error(`Response status: ${response.status}`);
@@ -36,7 +38,8 @@ export class LinkPreviewCard extends DDDSuper(I18NMixin(LitElement)) {
       if (hereElement || thereElement) {
         this.loading = false;
         hereElement.innerHTML = JSON.stringify(json.data, null, 2);
-        thereElement.innerHTML = json.data["og:title"];
+        thereElement.innerHTML = json.data["description"];
+        console.log(this.loading);
       }
      
     } catch (error) {
@@ -78,6 +81,7 @@ export class LinkPreviewCard extends DDDSuper(I18NMixin(LitElement)) {
       ...super.properties,
       title: { type: String, reflect:true },
       link: { type: String, reflect:true  },
+      loading: { type: Boolean, reflect:true },
     };
   }
 
@@ -99,9 +103,15 @@ export class LinkPreviewCard extends DDDSuper(I18NMixin(LitElement)) {
         font-size: var(--link-preview-card-label-font-size, var(--ddd-font-size-s));
       }
       pre{
-        height: 100px;
-        width: 95%;
+        height: 1.5em;
+        width: 20em;
         color:black;
+        font-size: 1em;
+        text-overflow: ellipsis;
+        overflow: hidden;
+      }
+      #here{
+        height: 6em;
       }
       .loader {
         border: 16px solid #f3f3f3; /* Light grey */
@@ -110,7 +120,20 @@ export class LinkPreviewCard extends DDDSuper(I18NMixin(LitElement)) {
         width: 120px;
         height: 120px;
         animation: spin 2s linear infinite;
+        
       }
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+      #banner {
+        display: flex;
+        flex-direction: column;
+        color: white;
+        background-color: var(--ddd-theme-default-white );
+        width:21.6em;
+      }
+      
 
     `];
   }
@@ -121,13 +144,16 @@ export class LinkPreviewCard extends DDDSuper(I18NMixin(LitElement)) {
 <div class="wrapper">
   <div>
     <input id="input" type="text" value="${this.link}" @input="${this.inputChanged}">
-  </div>
-  <div class="loader" ?hidden="${!this.loading}">
-      <pre id="there" >
+  
+  <div class="loader" ?hidden="${!this.loading}"></div>
+  <div id="banner">
+      <pre id="there">
       </pre>
-      <pre id="here" >
+      <pre id="here">
       </pre>
   </div>
+  </div>
+ 
 </div>`;
   }
 
