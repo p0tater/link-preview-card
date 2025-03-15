@@ -19,10 +19,10 @@ export class LinkPreviewCard extends DDDSuper(I18NMixin(LitElement)) {
     this.value = this.shadowRoot.querySelector('#input').value;
     this.link = this.value;
     this.getData(this.value);
+    console.log(this.loading);
   }
 
   async getData(link) {
-    this.loading = true;
     const url = `https://open-apis.hax.cloud/api/services/website/metadata?q=https://${this.link}`;
     try {
       
@@ -37,17 +37,21 @@ export class LinkPreviewCard extends DDDSuper(I18NMixin(LitElement)) {
       const thereElement = this.shadowRoot.querySelector('#there');
       if (hereElement || thereElement) {
         this.loading = false;
+        this.hasOutput = true;
         hereElement.innerHTML = JSON.stringify(json.data, null, 2);
         thereElement.innerHTML = json.data["description"];
         console.log(this.loading);
       }
      
     } catch (error) {
+      this.shadowRoot.querySelector('#here').innerHTML = "";
+      this.shadowRoot.querySelector('#there').innerHTML = "";
       console.error(error.message);
+      this.loading = false;
+      this.hasOutput = false;
     }
   }
-
-  
+ 
 
   
 
@@ -62,6 +66,7 @@ export class LinkPreviewCard extends DDDSuper(I18NMixin(LitElement)) {
     this.title = "";
     this.t = this.t || {};
     this.loading = false;
+    this.hasOutput = false;
     this.t = {
       ...this.t,
       title: "Title",
@@ -82,6 +87,7 @@ export class LinkPreviewCard extends DDDSuper(I18NMixin(LitElement)) {
       title: { type: String, reflect:true },
       link: { type: String, reflect:true  },
       loading: { type: Boolean, reflect:true },
+      hasOutput: { type: Boolean, reflect:true },
     };
   }
 
@@ -146,7 +152,7 @@ export class LinkPreviewCard extends DDDSuper(I18NMixin(LitElement)) {
     <input id="input" type="text" value="${this.link}" @input="${this.inputChanged}">
   
   <div class="loader" ?hidden="${!this.loading}"></div>
-  <div id="banner">
+  <div id="banner" style="display: ${this.hasOutput ? 'flex' : 'none'};">
       <pre id="there">
       </pre>
       <pre id="here">
