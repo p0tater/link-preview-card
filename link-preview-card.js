@@ -47,7 +47,7 @@ export class LinkPreviewCard extends DDDSuper(I18NMixin(LitElement)) {
       this.shadowRoot.querySelector('#here').innerHTML = "";
       this.shadowRoot.querySelector('#there').innerHTML = "";
       console.error(error.message);
-      this.loading = false;
+      this.loading = true;
       this.hasOutput = false;
     }
   }
