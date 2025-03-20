@@ -38,8 +38,8 @@ export class LinkPreviewCard extends DDDSuper(I18NMixin(LitElement)) {
       if (hereElement || thereElement) {
         this.loading = false;
         this.hasOutput = true;
-        hereElement.innerHTML = JSON.stringify(json.data, null, 2);
-        thereElement.innerHTML = json.data["description"];
+        thereElement.innerHTML = json.data["og:title"] || json.data["title"]; //JSON.stringify(json.data, null, 2); //
+        hereElement.innerHTML = json.data["description"];
         console.log(this.loading);
       }
      
@@ -66,6 +66,7 @@ export class LinkPreviewCard extends DDDSuper(I18NMixin(LitElement)) {
     this.title = "";
     this.t = this.t || {};
     this.loading = false;
+    this.value = "";
     this.hasOutput = false;
     this.t = {
       ...this.t,
@@ -87,7 +88,7 @@ export class LinkPreviewCard extends DDDSuper(I18NMixin(LitElement)) {
       title: { type: String, reflect:true },
       link: { type: String, reflect:true  },
       loading: { type: Boolean, reflect:true },
-      hasOutput: { type: Boolean, reflect:true },
+      hasOutput: { type: Boolean, reflect:true, attribute: "has-output" },
     };
   }
 
@@ -153,9 +154,9 @@ export class LinkPreviewCard extends DDDSuper(I18NMixin(LitElement)) {
   
   <div class="loader" ?hidden="${!this.loading}"></div>
   <div id="banner" style="display: ${this.hasOutput ? 'flex' : 'none'};">
-      <pre id="there">
-      </pre>
-      <pre id="here">
+      <a id="there" href="${this.link}" target="_blank"> 
+      </a>
+      <pre id="here"> 
       </pre>
   </div>
   </div>
