@@ -38,28 +38,7 @@ export class LinkPreviewCard extends DDDSuper(I18NMixin(LitElement)) {
     return true;
   }
   
-   hexToRgba(hex, alpha) {
-    // Remove the '#' character if it exists
-    hex = hex.replace("#", "");
-  
-    // Parse the hex value into red, green, and blue components
-    const r = parseInt(hex.substring(0, 2), 16);
-    const g = parseInt(hex.substring(2, 4), 16);
-    const b = parseInt(hex.substring(4, 6), 16);
-  
-    // If alpha is not provided, default to 1 (fully opaque)
-    if (alpha === undefined) {
-      alpha = 1;
-    } else if (alpha < 0) {
-      alpha = 0;
-    } else if (alpha > 1) {
-      alpha = 1
-    }
-  
-    // Return the RGBA color value as a string
-    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
-  }
-
+   
   async getData(link) {
     const url = `https://open-apis.hax.cloud/api/services/website/metadata?q=https://${link}`
     
@@ -238,11 +217,13 @@ export class LinkPreviewCard extends DDDSuper(I18NMixin(LitElement)) {
         color: var(--ddd-theme-primary);
         width:21.6em;
       }
-      a{
+      #there{
         text-decoration: none;
         margin-left: var(--ddd-spacing-2);
         font-family: var(--ddd-font-secondary);
         font-weight: var(--ddd-font-weight-regular);
+        color: var(--ddd-theme-default-coalyGray);
+
       }
 
       img{
@@ -253,6 +234,7 @@ export class LinkPreviewCard extends DDDSuper(I18NMixin(LitElement)) {
       
 
     `];
+    
   }
 
   // Lit render the HTML <h3><span>${this.t.title}:</span> ${this.title}</h3> 
