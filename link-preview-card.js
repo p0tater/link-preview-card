@@ -50,15 +50,10 @@ export class LinkPreviewCard extends DDDSuper(I18NMixin(LitElement)) {
       }
   
       const json = await response.json();
-     
       const hereElement = this.shadowRoot.querySelector('#here');
       const thereElement = this.shadowRoot.querySelector('#there');
-      const psuColor = "var(--ddd-primary-2)"; //"#cc0000";
-      
+      const psuColor = "var(--ddd-primary-2)";   
     
-      
-
-      //this.shadowRoot.querySelector('#there').appendChild(image);
       
       if (hereElement || thereElement) {
         this.image = json.data["og:image"] || json.data["ld+json"].logo;
@@ -85,7 +80,7 @@ export class LinkPreviewCard extends DDDSuper(I18NMixin(LitElement)) {
           hereElement.innerHTML = json.data["description"];
         }
         console.log(this.loading);
-        if(this.containsWords(this.link,"psu")) { //this.link === "psu.edu"
+        if(this.containsWords(this.link,"psu")) { //checks if link contains "psu"
           this.backgroundColor = psuColor;
           console.log('hello');
         } else{
@@ -106,12 +101,6 @@ export class LinkPreviewCard extends DDDSuper(I18NMixin(LitElement)) {
       }, 1500);
     }
   }
-
-  
-
-  
-  
-
 
   static get tag() {
     return "link-preview-card";
