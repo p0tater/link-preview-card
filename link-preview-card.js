@@ -179,6 +179,17 @@ export class LinkPreviewCard extends DDDSuper(I18NMixin(LitElement)) {
   static get styles() {
     return [super.styles,
     css`
+
+    @media screen and (max-width: 420px) {
+      link-preview-card {
+        justify-content: center;
+      }
+      .wrapper {
+        width: 90%;
+        margin: 0;
+        padding: var(--ddd-spacing-2);
+      }
+    }
    
       :host {
         display: block;
