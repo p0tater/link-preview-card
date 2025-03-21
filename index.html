@@ -8,9 +8,15 @@
   <meta name="Description" content="Demonstration for link-preview-card">
 
   <style>
+     @media screen and (max-width: 420px) {
+      link-preview-card {
+        display: grid;
+        width: 100%;
+      }
+    }
     :root, html, body {
-      margin: 0;
-      padding: 0;
+      margin: var(--ddd-spacing-0);
+      padding: var(--ddd-spacing-0);
     }
     #demo {
       margin: var(--ddd-spacing-2);
@@ -19,6 +25,7 @@
       margin: var(--ddd-spacing-2);
       border: var(--ddd-border-md);
       border-radius: var(--ddd-radius-lg);
+      display: inline-block;
     }
     link-preview-card:hover {
       box-shadow: var(--ddd-boxShadow-sm);
@@ -36,7 +43,7 @@
   <div id="demo">
     <h1>link-preview-card</h1>
     <!-- this is going to do whatever the tag's defaults are -->
-    <h2>Default</h2>
+    <h2>Default</h2> 
     <link-preview-card></link-preview-card>
     <link-preview-card></link-preview-card>
   </div>
@@ -44,39 +51,7 @@
 
   <!-- Take HAX, the Web and you further down the rabbit hole -->
   <style>
-    #follow-the-white-rabbit {
-      margin: var(--ddd-spacing-4) auto 64px  16px;
-      background-color: var(--ddd-accent-4);
-      color: black;
-    }
-    #follow-the-white-rabbit[open] summary {
-      background-color: var(--ddd-accent-4) !important;
-      color: black;
-    }
-    #follow-the-white-rabbit[open] .content {
-      padding: 0 var(--ddd-spacing-4);
-    }
-    #follow-the-white-rabbit ul,
-    #follow-the-white-rabbit li {
-      padding: 0;
-      margin: 0;
-    }
-    #follow-the-white-rabbit li {
-      font-size: var(--ddd-font-size-xs);
-      list-style: none;
-    }
-    #follow-the-white-rabbit li strong,
-    #follow-the-white-rabbit li a {
-      padding: var(--ddd-spacing-2) var(--ddd-spacing-4);
-      color: black;
-      display: block;
-      font-weight: bold;
-    }
-    #follow-the-white-rabbit li:focus-within a,
-    #follow-the-white-rabbit li:hover a {
-      background-color: black;
-      color: yellow;
-    }
+  
   </style>
   
 </body>
